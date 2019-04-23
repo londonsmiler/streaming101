@@ -1,5 +1,5 @@
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
 
@@ -14,6 +14,8 @@ object Application {
     import spark.implicits._
 
 
+    // Get our enrichment stream (e.g. sedol -> dpfm id mapping)
+    val mappings = spark.read.option("header", "true").csv("src/main/resources/mapping.csv")
 
     // Create DataFrame representing the stream of input lines from connection to localhost:9999
     val lines = spark.readStream
@@ -35,11 +37,17 @@ object Application {
     // if file looks promising can move to Kafka later
     // see https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html
 
-    var thing = inputFileData.writeStream.format("console").start()
+    // print stream to console
+//    var thing = inputFileData.writeStream.format("console").start()
+//    thing.processAllAvailable()
 
 
+    val mappedData = inputFileData.join(mappings, "name")
 
-    thing.processAllAvailable()
+
+    val query = mappedData.writeStream.format("console").start()
+
+
 
 /*
     // Split the lines into words
@@ -54,10 +62,9 @@ object Application {
       .format("console")
       .start()
 */
-//    query.awaitTermination()
+    query.awaitTermination()
 
   }
-
 
 
   def buildSchema() : StructType = {

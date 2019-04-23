@@ -1,2 +1,2 @@
-{ "fruit": "Apple", "size": "Large", "color": "Red"}
-{ "fruit": "Bananna", "size": "Small", "color": "Yellow"}
+{ "name": "Apple", "size": "Large"}
+{ "name": "Bananna", "size": "Small"}
