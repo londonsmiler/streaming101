@@ -23,7 +23,7 @@ object FileApplication {
     val inputFileData = spark.readStream.schema(buildSchema()).json("src/main/resources/readingfrom")
 
     // check this is streaming
-    println("I HAVE A STRAMING DATA SOURCE? " + inputFileData.isStreaming)
+    println("I HAVE A STREAMING DATA SOURCE? " + inputFileData.isStreaming)
 
     // if file looks promising can move to Kafka later
     // see https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html
